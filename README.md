@@ -1,5 +1,112 @@
+You’re right! The NVIDIA OpenCV is installed but not properly linked to Python’s path. Here’s how to fix this:
 
-The “OpenCV: missing” in jtop after installing `nvidia-opencv` is likely because jtop is looking for OpenCV in a specific location or can’t detect the NVIDIA-specific installation. Let’s troubleshoot this:
+## Step 1: Find the NVIDIA OpenCV Installation
+
+```bash
+# Find where NVIDIA OpenCV is installed
+find /usr -name "*opencv*" -type d 2>/dev/null
+find /opt -name "*opencv*" -type d 2>/dev/null
+
+# Check common NVIDIA locations
+ls -la /usr/lib/aarch64-linux-gnu/ | grep opencv
+ls -la /usr/local/lib/ | grep opencv
+ls -la /opt/nvidia/ 2>/dev/null
+```
+
+## Step 2: Check Python Path
+
+```bash
+# See current Python path
+python3 -c "import sys; print('\n'.join(sys.path))"
+
+# Check if OpenCV is importable
+python3 -c "import cv2; print(cv2.__file__)"
+```
+
+## Step 3: Add OpenCV to Python Path
+
+If OpenCV is installed but not in Python path, add it:
+
+```bash
+# Find the OpenCV Python bindings
+find /usr -name "cv2*.so" 2>/dev/null
+
+# Typical locations for NVIDIA OpenCV on Jetson:
+ls -la /usr/lib/python3/dist-packages/ | grep cv2
+ls -la /usr/local/lib/python3.*/dist-packages/ | grep cv2
+```
+
+## Step 4: Create Symbolic Links (if needed)
+
+If OpenCV is installed but not linked properly:
+
+```bash
+# Find the OpenCV installation
+OPENCV_PATH=$(find /usr -name "cv2*.so" 2>/dev/null | head -1)
+echo "Found OpenCV at: $OPENCV_PATH"
+
+# Create symbolic link in Python site-packages
+python3 -c "import site; print(site.getsitepackages())"
+
+# Create the link (adjust path as needed)
+sudo ln -sf $OPENCV_PATH /usr/local/lib/python3.8/dist-packages/
+```
+
+## Step 5: Set Environment Variables
+
+Add to your `~/.bashrc`:
+
+```bash
+echo 'export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## Step 6: Alternative - Reinstall with Proper Python Integration
+
+```bash
+# Remove and reinstall with Python integration
+sudo apt remove python3-opencv
+sudo apt install python3-opencv python3-opencv-contrib
+```
+
+## Step 7: Check Package Contents
+
+```bash
+# See what files nvidia-opencv installed
+dpkg -L nvidia-opencv
+
+# Check if Python bindings are included
+dpkg -L python3-opencv 2>/dev/null || echo "python3-opencv not installed"
+```
+
+## Step 8: Manual Python Setup
+
+If OpenCV libraries exist but Python can’t find them:
+
+```bash
+# Create a .pth file to add the path
+echo "/usr/lib/python3/dist-packages" | sudo tee /usr/local/lib/python3.8/dist-packages/opencv.pth
+
+# Or set PYTHONPATH temporarily
+export PYTHONPATH=/usr/lib/python3/dist-packages:$PYTHONPATH
+python3 -c "import cv2; print('Success!')"
+```
+
+## Step 9: Verify Final Installation
+
+```bash
+python3 -c "
+import cv2
+print('OpenCV version:', cv2.__version__)
+print('OpenCV location:', cv2.__file__)
+build_info = cv2.getBuildInformation()
+print('CUDA support:', 'CUDA: YES' in build_info)
+"
+```
+
+
+-------
 
 ## Step 1: Verify OpenCV Installation
 
