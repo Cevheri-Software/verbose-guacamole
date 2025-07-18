@@ -1,3 +1,19 @@
+## Option 1: Use Pre-built OpenCV with CUDA (Recommended)
+
+Install a pre-built version with CUDA support:
+
+```bash
+# Remove current OpenCV
+sudo apt purge *libopencv*
+
+# Install OpenCV with CUDA support
+sudo apt update
+sudo apt install python3-opencv opencv-data libopencv-dev libopencv-contrib-dev
+
+# Or try the NVIDIA-specific build
+sudo apt install nvidia-opencv
+```
+
 ## Solution 1: Add CUDA to your PATH
 
 The CUDA toolkit is installed but not in your system PATH. Add these lines to your `~/.bashrc` file:
