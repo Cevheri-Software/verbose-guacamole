@@ -1,3 +1,13 @@
+## Solution 1: Add CUDA to your PATH
+
+The CUDA toolkit is installed but not in your system PATH. Add these lines to your `~/.bashrc` file:
+
+```bash
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
 # for algorithm
  - File to modify: /home/cevheri/cevheri_algo/env/lib/python3.10/site-packages/ultralytics/nn/tasks.py
 - Line to change: Around line 511 in the torch_safe_load function
