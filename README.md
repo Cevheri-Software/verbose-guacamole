@@ -1,4 +1,4 @@
-You’re right! The NVIDIA OpenCV is installed but not properly linked to Python’s path. Here’s how to fix this:
+https://drive.google.com/file/d/1JbwLyqpFCXmftaJY1oap8Sa6KfjoWJta/view?usp=sharing
 
 ## Step 1: Find the NVIDIA OpenCV Installation
 
