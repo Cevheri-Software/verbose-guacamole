@@ -1,3 +1,134 @@
+
+The “OpenCV: missing” in jtop after installing `nvidia-opencv` is likely because jtop is looking for OpenCV in a specific location or can’t detect the NVIDIA-specific installation. Let’s troubleshoot this:
+
+## Step 1: Verify OpenCV Installation
+
+Check if OpenCV is actually installed and working:
+
+```bash
+# Check Python OpenCV
+python3 -c "import cv2; print(cv2.__version__); print(cv2.getBuildInformation())"
+
+# Check system OpenCV libraries
+pkg-config --modversion opencv4
+# or
+pkg-config --modversion opencv
+
+# Check installed packages
+dpkg -l | grep opencv
+```
+
+## Step 2: Check Library Paths
+
+```bash
+# Find OpenCV libraries
+find /usr -name "*opencv*" -type f 2>/dev/null | head -10
+
+# Check library paths
+ldconfig -p | grep opencv
+```
+
+## Step 3: Reinstall with Proper Dependencies
+
+The issue might be missing dependencies. Try this approach:
+
+```bash
+# Clean up completely
+sudo apt purge *opencv* *libopencv*
+sudo apt autoremove
+sudo apt autoclean
+
+# Install dependencies first
+sudo apt update
+sudo apt install python3-dev python3-numpy
+sudo apt install libgtk-3-dev
+sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+
+# Install OpenCV with all components
+sudo apt install python3-opencv
+sudo apt install libopencv-dev libopencv-contrib-dev
+sudo apt install opencv-data
+
+# Verify installation
+python3 -c "import cv2; print('OpenCV version:', cv2.__version__)"
+```
+
+## Step 4: Alternative - Install from JetPack Components
+
+If you have JetPack SDK Manager access:
+
+```bash
+# Check available JetPack components
+sudo apt list --installed | grep jetpack
+
+# Install OpenCV from JetPack
+sudo apt install jetpack-sdk
+```
+
+## Step 5: Force jtop to Refresh
+
+Sometimes jtop caches information:
+
+```bash
+# Stop jtop service if running
+sudo systemctl stop jtop
+
+# Clear any cached data
+sudo rm -rf ~/.jtop/
+
+# Restart jtop
+sudo jtop
+```
+
+## Step 6: Manual OpenCV Build (If needed)
+
+If the packages still don’t work, here’s a minimal build:
+
+```bash
+# Install build dependencies
+sudo apt install build-essential cmake git
+sudo apt install python3-dev python3-numpy
+
+# Download and build
+cd ~
+git clone https://github.com/opencv/opencv.git
+cd opencv
+git checkout 4.5.4  # Match your previous version
+mkdir build && cd build
+
+# Minimal build with CUDA
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \
+    -D WITH_CUDA=ON \
+    -D CUDA_ARCH_BIN=7.2 \
+    -D BUILD_TESTS=OFF \
+    -D BUILD_EXAMPLES=OFF \
+    -D PYTHON3_EXECUTABLE=/usr/bin/python3 \
+    ..
+
+make -j4
+sudo make install
+sudo ldconfig
+```
+
+## Step 7: Check What jtop Expects
+
+```bash
+# Check jtop source or config to see what it's looking for
+python3 -c "
+import cv2
+print('OpenCV found at:', cv2.__file__)
+print('Version:', cv2.__version__)
+print('Build info available:', 'CUDA' in cv2.getBuildInformation())
+"
+```
+
+Try these steps in order. The most likely issue is that jtop is looking for OpenCV in a specific location or the installation didn’t complete properly. Let me know what the verification commands show and I can help troubleshoot further.​​​​​​​​​​​​​​​​
+
+
+
+
+
 ## Option 1: Use Pre-built OpenCV with CUDA (Recommended)
 
 Install a pre-built version with CUDA support:
