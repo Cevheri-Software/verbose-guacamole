@@ -1,3 +1,7 @@
+
+sudo docker pull nvcr.io/nvidia/l4t-ml:r35.2.1-py3
+r35.2.1-py3: Pulling from nvidia/l4t-ml
+
 https://drive.google.com/file/d/1JbwLyqpFCXmftaJY1oap8Sa6KfjoWJta/view?usp=sharing
 
 ## Step 1: Find the NVIDIA OpenCV Installation
