@@ -1,6 +1,13 @@
-
+bu docker container indirdim , 
 sudo docker pull nvcr.io/nvidia/l4t-ml:r35.2.1-py3
-r35.2.1-py3: Pulling from nvidia/l4t-ml
+
+...... kodlar da çaliştridim 
+
+.. jett.py yukle
+
+..su kod containernin içinde çaliştrimak isterim nasıl yaparım,
+
+
 
 https://drive.google.com/file/d/1JbwLyqpFCXmftaJY1oap8Sa6KfjoWJta/view?usp=sharing
 
