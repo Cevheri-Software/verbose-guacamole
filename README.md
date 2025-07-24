@@ -1,3 +1,12 @@
+´´´
+sudo docker start -ai 4499772f8cab
+pip install tqdm
+pip3 install --no-cache-dir ultralytics --no-deps # Install ultralytics without pulling its own dependencies
+
+
+´´´
+
+
 bu docker container indirdim , 
 sudo docker pull nvcr.io/nvidia/l4t-ml:r35.2.1-py3
 
