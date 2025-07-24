@@ -1,0 +1,14 @@
+#include <Servo.h>
+
+Servo myServo;  // Servo nesnesi oluştur
+
+void setup() {
+  myServo.attach(9);    // Servo sinyal pini 9
+  myServo.write(0);     // Servo 0 derece konuma git
+  delay(2000);          // 2 saniye bekle
+  myServo.write(90);    // Servo 90 derece konuma git
+}
+
+void loop() {
+  // Burada sürekli işlem yapmaya gerek yok
+}
